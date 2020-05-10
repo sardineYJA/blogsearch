@@ -2,7 +2,6 @@ package com.example.blogsearch.Service;
 
 import com.example.blogsearch.Entity.BlogEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -31,6 +30,7 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testReadMarkdownService() {
+        // 测试读取Markdown文件列表
         List<String> files = readMarkdownService.getMarkdownList(mdFilePath);
         System.out.println(files.size());
         System.out.println(files);
@@ -38,6 +38,7 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testIsIndexExists() {
+        // 测试索引检测与删除
         System.out.println(blogEsService.isIndexExists("blog"));
         System.out.println(blogEsService.deleteIndex("blog"));
         System.out.println(blogEsService.isIndexExists("blog"));
@@ -45,15 +46,16 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testGetBlogEntityByParseFile() {
+        // 测试插入单条数据到ES
         BlogEntity blogEntity = readMarkdownService.getBlogEntityByParseFile(mdFilePath, fileName);
         System.out.println(blogEntity);
-
-        //blogEntity.setId("1");
+        blogEntity.setId("1");
         blogEsService.insertOrUpdateOne("blog", blogEntity);
     }
 
     @Test
     public void testBatchInsert() {
+        // 测试批量插入
         BlogEntity b3 = readMarkdownService.getBlogEntityByParseFile(mdFilePath, fileName);
         b3.setId("31");
         BlogEntity b4 = readMarkdownService.getBlogEntityByParseFile(mdFilePath, fileName);
@@ -70,13 +72,14 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testDeleteByQuery() {
-        // 删除文档，字段:字段值
+        // 删除指定文档，字段:字段值
         TermQueryBuilder termQueryBuilder = new TermQueryBuilder("_id", "14");
         blogEsService.deleteByQuery("blog", termQueryBuilder);
     }
 
     @Test
     public void testSearch() {
+        // 测试SearchSourceBuilder
         SearchSourceBuilder builder = new SearchSourceBuilder();
         builder.from(1);     // 下标0开始
         builder.size(3);     // 查询个数
@@ -87,6 +90,7 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testSearch2() {
+        // 测试精确查询
         SearchSourceBuilder builder = new SearchSourceBuilder();
 
         // keyword 精确查询
@@ -104,25 +108,26 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testSearch3() {
+        // 测试匹配查询
         SearchSourceBuilder builder = new SearchSourceBuilder();
 
         // 通配符查询，*表示0个或多个字符，?表示单个字符
-        builder.query(QueryBuilders.wildcardQuery("title", "*代理"));
+        //builder.query(QueryBuilders.wildcardQuery("title", "*代理"));
 
         // 匹配查询
-        // builder.query(QueryBuilders.matchQuery("content", "*测试*"));
+        builder.query(QueryBuilders.matchQuery("content", "设"));
 
         // 多字段匹配查询
-        // builder.query(QueryBuilders.multiMatchQuery("*测试*",  "title", "content"));
+        // builder.query(QueryBuilders.multiMatchQuery("测试",  "title", "content"));
 
         List<BlogEntity> blogList = blogEsService.search("blog", builder, BlogEntity.class);
-        System.out.println(blogList);
+        System.out.println(blogList.size());
     }
 
     @Test
     public void testSearch4() {
+        // 测试模糊查询
         SearchSourceBuilder builder = new SearchSourceBuilder();
-
         // 模糊查询，字段包含某个字符(单个中文或单词)
         // builder.query(QueryBuilders.fuzzyQuery("content",  "本"));
         builder.query(QueryBuilders.fuzzyQuery("title",  "Ubuntu"));
@@ -132,6 +137,7 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testSearch5() {
+        // 测试范围查询
         SearchSourceBuilder builder = new SearchSourceBuilder();
 
         // 年龄 >= 30
@@ -155,10 +161,10 @@ public class ReadMarkdownServiceTest {
 
     @Test
     public void testSearch6() {
+        // 测试scroll查询，这边测试数据需要超过10000条
         SearchSourceBuilder builder = new SearchSourceBuilder();
-        builder.query(QueryBuilders.fuzzyQuery("title",  "Ubuntu"));
         List<BlogEntity> blogList = blogEsService.scrollSearch("blog", builder, 100L, BlogEntity.class);
-        System.out.println(blogList);
+        System.out.println(blogList.size());
     }
 
     @Test

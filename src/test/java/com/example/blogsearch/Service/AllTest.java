@@ -40,15 +40,9 @@ public class AllTest {
             BlogEntity blog = readMarkdownService.getBlogEntityByParseFile(mdFilePath, name);
             blog.setId(Integer.toString(id));
             list.add(blog);
-            System.out.println(id);
-            synchronized (blog){
-                blogEsService.insertOrUpdateOne("blog", blog);
-            }
             id = id + 1;
-
         }
-
         System.out.println(list.size());
-        // blogEsService.insertBath("blog", list);   // 批量只能50个？？
+        blogEsService.insertBath("blog", list);
     }
 }

@@ -41,7 +41,7 @@ public class SearchController {
     @GetMapping("/searchByKeyword")
     public String searchByKeyword(@RequestParam(value = "keyword") String keyword, Model model) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
-        builder.query(QueryBuilders.matchQuery("content", "*"+keyword+"*"));
+        builder.query(QueryBuilders.matchQuery("content", keyword));
         List<BlogEntity> blogList = blogEsService.search("blog", builder, BlogEntity.class);
         model.addAttribute("blogs", blogList);
         return "/index";    // 跳转页面：details.html?id=XX

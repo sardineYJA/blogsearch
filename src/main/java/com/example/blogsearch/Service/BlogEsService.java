@@ -111,12 +111,16 @@ public class BlogEsService implements Serializable {
         }
     }
 
-    // 查询所有数据
+    // 查询所有数据，这里为了方便直接设置返回条数10000（最大）
     public <T> List<T> searchAll(String index, Class<T> c) {
 
         RestHighLevelClient client = esClientUtil.getClient();
         SearchRequest request = new SearchRequest(index);
-        try {  // 这样只会获取10条，问题待处理
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        builder.from(0);          // 下标0开始
+        builder.size(10000);     // 查询个数
+        request.source(builder);
+        try {
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
             SearchHit[] hits = response.getHits().getHits();
             List<T> result = new ArrayList<>(hits.length);
