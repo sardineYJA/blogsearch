@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot + ElasticSearch博客检索系统</title>
+</head>
+
+<body>
+<div>
+    <h2>Spring Boot博客检索系统</h2>
+
+        <form action="searchByKeyword">
+            <input type="text" name="keyword" placeholder="请输入要检索的关键字" />
+            <input type="submit" value="搜索" />
+        </form>
+
+        <div>
+            <tr th:each="blog:${blogs}">
+                <td th:text="${blog.id}"></td><br/>
+                <td th:text="${blog.title}"></td><br/>
+                <td th:text="${blog.createDate}"></td><br/>
+                <a th:href="@{'details.html?id='+${blog.id}}">文章详情</a><br/><br/>
+            </tr>
+        </div>
+</div>
+</body>
+
+</html>

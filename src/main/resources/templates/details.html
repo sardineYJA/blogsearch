@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章详情</title>
+</head>
+<body>
+<div>
+    <div>
+        <div>
+            <div>
+                <tr th:each="blog:${blogs}">
+                    <td th:text="${blog.id}"></td><br/>
+                    <td th:text="${blog.title}"></td><br/>
+                    <td th:text="${blog.createDate}"></td><br/>
+                    <td th:text="${blog.content}"></td><br/>
+                </tr>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
