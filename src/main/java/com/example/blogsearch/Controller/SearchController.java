@@ -22,14 +22,14 @@ public class SearchController {
     @Autowired
     BlogEsService blogEsService;
 
-    @RequestMapping("index")
+    @RequestMapping("index")    // 首页
     public String index(Model model) {
         List<BlogEntity> blogList = blogEsService.searchAll("blog", BlogEntity.class);
         model.addAttribute("blogs", blogList);
         return "/index";    // 跳转页面：index.html
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")       // blog详情页面
     public String searchById(@RequestParam(value = "id") String id, Model model) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         builder.query(QueryBuilders.termQuery("id", id));
@@ -38,7 +38,7 @@ public class SearchController {
         return "/details";    // 跳转页面：details.html?id=XX
     }
 
-    @GetMapping("/searchByKeyword")
+    @GetMapping("/searchByKeyword")    // 检索返回结果到index
     public String searchByKeyword(@RequestParam(value = "keyword") String keyword, Model model) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         builder.query(QueryBuilders.matchQuery("content", keyword));
