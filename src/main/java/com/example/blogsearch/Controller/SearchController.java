@@ -22,7 +22,7 @@ public class SearchController {
     @Autowired
     BlogEsService blogEsService;
 
-    @RequestMapping("index")    // 首页
+    @RequestMapping("index")    // 首页index
     public String index(Model model) {
         List<BlogEntity> blogList = blogEsService.searchAll("blog", BlogEntity.class);
         model.addAttribute("blogs", blogList);
